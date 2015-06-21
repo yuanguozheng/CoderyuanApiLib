@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2015 coderyuan.com. All Rights Reserved.
  *
- * CoderyuanMvcLib
+ * CoderyuanApiLib
  *
  * TextUtils.java created on 2015年6月21日
  *
