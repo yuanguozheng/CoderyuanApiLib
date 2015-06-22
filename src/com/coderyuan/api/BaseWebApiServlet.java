@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.coderyuan.models.ResultModel;
 import com.coderyuan.utils.JsonUtil;
-import com.coderyuan.utils.TextUtils;
+import com.coderyuan.utils.StringUtils;
 
 /**
  * Api基类
@@ -79,7 +79,7 @@ public abstract class BaseWebApiServlet extends HttpServlet {
     }
 
     public String getRestParam() {
-        return TextUtils.isEmpty(mRestParam) ? null : mRestParam;
+        return StringUtils.isEmpty(mRestParam) ? null : mRestParam;
     }
 
     private void initRestParam(HttpServletRequest req) {
