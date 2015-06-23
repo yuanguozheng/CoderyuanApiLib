@@ -20,9 +20,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.coderyuan.models.ResultModel;
 import com.coderyuan.utils.JsonUtil;
-import com.coderyuan.utils.StringUtils;
 
 /**
  * Api基类
@@ -49,8 +50,8 @@ public abstract class BaseWebApiServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        initRestParam(req);
         initParams(req);
+        initRestParam(req);
         initResProperty(res);
         if (!mAllowGet) {
             return;
@@ -79,20 +80,11 @@ public abstract class BaseWebApiServlet extends HttpServlet {
     }
 
     public String getRestParam() {
-        return StringUtils.isEmpty(mRestParam) ? null : mRestParam;
+        return StringUtils.isBlank(mRestParam) ? null : mRestParam;
     }
 
     private void initRestParam(HttpServletRequest req) {
-        String uri = req.getRequestURI();
-        if (uri == null) {
-            return;
-        }
-        String baseUri = String.format("%s%s", req.getContextPath(), req.getServletPath());
-        uri = uri.replace(baseUri, "");
-        int index = uri.lastIndexOf("/");
-        if (index != -1) {
-            mRestParam = uri.substring(index + 1);
-        }
+        mRestParam = req.getPathInfo();
     }
 
     private void initParams(HttpServletRequest req) throws UnsupportedEncodingException {

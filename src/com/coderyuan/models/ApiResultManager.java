@@ -19,7 +19,7 @@ public class ApiResultManager {
     }
 
     public enum SuccessTypes {
-        SUCCESS
+        NEED_VERIFY, SUCCESS
     }
 
     public static ResultModel getResult(boolean isSuccess, Object data) {
@@ -37,8 +37,12 @@ public class ApiResultManager {
         return getErrorResult(error.toString());
     }
 
-    public static ResultModel getSuccesResult(String msg) {
+    public static ResultModel getSuccesResult(Object msg) {
         return getResult(true, msg);
+    }
+
+    public static ResultModel getSuccesResult(SuccessTypes success) {
+        return getSuccesResult(success.toString());
     }
 
     public static ResultModel getDefaultSuccesResult() {
