@@ -43,27 +43,31 @@ public abstract class BaseWebApiServlet extends HttpServlet {
 
     public BaseWebApiServlet(boolean isAllowGet) {
         super();
-        mAllowGet = isAllowGet;
+        setAllowGet(isAllowGet);
+    }
+
+    public void setAllowGet(boolean allowGet) {
+        mAllowGet = allowGet;
+    }
+
+    public boolean isAllowGet() {
+        return mAllowGet;
     }
 
     public abstract ResultModel doOperation();
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        initParams(req);
-        initRestParam(req);
-        initResProperty(res);
         if (!mAllowGet) {
+            res.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
-        JsonUtil.writeJson(res, doOperation());
+        procRequest(req, res);
     }
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        initParams(req);
-        initResProperty(res);
-        JsonUtil.writeJson(res, doOperation());
+        procRequest(req, res);
     }
 
     public String getParam(String key) {
@@ -87,13 +91,16 @@ public abstract class BaseWebApiServlet extends HttpServlet {
         mRestParam = req.getPathInfo();
     }
 
+    private void procRequest(HttpServletRequest req, HttpServletResponse res) throws UnsupportedEncodingException,
+            IOException {
+        initParams(req);
+        JsonUtil.writeJson(res, doOperation());
+    }
+
     private void initParams(HttpServletRequest req) throws UnsupportedEncodingException {
         req.setCharacterEncoding("utf-8");
         mParams = req.getParameterMap();
+        initRestParam(req);
     }
 
-    private void initResProperty(HttpServletResponse res) {
-        res.setContentType("application/json;\tcharset=utf-8");
-        res.setCharacterEncoding("utf-8");
-    }
 }

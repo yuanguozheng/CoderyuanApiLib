@@ -22,6 +22,8 @@ import com.google.gson.GsonBuilder;
 public class JsonUtil {
 
     public static void writeJson(HttpServletResponse res, Object obj) throws IOException {
+        res.setContentType("application/json;\tcharset=utf-8");
+        res.setCharacterEncoding("utf-8");
         PrintWriter writer = res.getWriter();
         writer.write(toJson(obj));
     }
