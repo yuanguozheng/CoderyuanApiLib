@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 ibenchu.com. All Rights Reserved.
+ * Copyright (C) 2015 coderyuan.com. All Rights Reserved.
  *
  * CoderyuanApiLib
  *
@@ -22,7 +22,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.StringTokenizer;
+
+import org.apache.commons.lang3.StringUtils;
+
+import eu.medsea.mimeutil.MimeUtil;
 
 /**
  * @author yuanguozheng
@@ -79,6 +84,8 @@ public class FileUtils {
                 }
             } catch (Exception e) {
                 str.append(e.toString());
+            } finally {
+                br.close();
             }
             st = str.toString();
             if (st != null && st.length() > 1)
@@ -122,7 +129,7 @@ public class FileUtils {
             String txt;
             txts = folderPath;
             StringTokenizer st = new StringTokenizer(paths, "|");
-            for (int i = 0; st.hasMoreTokens(); i++) {
+            while (st.hasMoreTokens()) {
                 txt = st.nextToken().trim();
                 if (txts.lastIndexOf("/") != -1) {
                     txts = createFolder(txts + txt);
@@ -287,6 +294,8 @@ public class FileUtils {
                     bytesum += byteread;
                     fs.write(buffer, 0, byteread);
                 }
+                System.out.println(bytesum);
+                fs.close();
                 inStream.close();
             }
         } catch (Exception e) {
@@ -407,6 +416,76 @@ public class FileUtils {
             e.printStackTrace();
             return null;
         }
+    }
 
+    /**
+     * 获得去除扩展名后的文件名
+     * 
+     * @param fileName，原始文件名
+     * @return 无扩展名的文件名，无文件名返回null
+     */
+    public static String getFileNameWithoutExtension(String fileName) {
+        if (StringUtils.isEmpty(fileName)) {
+            return null;
+        }
+        String name = fileName;
+        int index = fileName.lastIndexOf('.');
+        if (index != -1) {
+            name = fileName.substring(0, index);
+        }
+        return name;
+    }
+
+    /**
+     * 获得扩展名
+     * 
+     * @param 文件名
+     * @return 扩展名（不含.），无扩展名返回null
+     */
+    public static String getExt(String fileName) {
+        if (StringUtils.isEmpty(fileName)) {
+            return null;
+        }
+        int index = fileName.lastIndexOf(".");
+        return index == -1 ? null : fileName.substring(index + 1);
+    }
+
+    /**
+     * 用文件名获得MIME
+     * 
+     * @param 文件名
+     * @return MIME，无文件名返回null
+     */
+    public static String getMimeByName(String name) {
+        if (StringUtils.isEmpty(name)) {
+            return null;
+        }
+        MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
+        Collection<?> mimeTypes = MimeUtil.getMimeTypes(name);
+        return mimeTypes.toString();
+    }
+
+    public static FileOutputStream openNewFileOutput(File file) throws IOException {
+        delFile(file.getAbsolutePath());
+        ensureParent(file);
+        file.createNewFile();
+        return new FileOutputStream(file);
+    }
+
+    /**
+     * 保证文件父目录存在
+     * 
+     * @param file，文件
+     */
+    public static boolean ensureParent(final File file) {
+        if (null != file) {
+            final File parentFile = file.getParentFile();
+            if ((null != parentFile) && !parentFile.exists()) {
+                parentFile.mkdirs();
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 }

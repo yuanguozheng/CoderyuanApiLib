@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 ibenchu.com. All Rights Reserved.
+ * Copyright (C) 2015 coderyuan.com. All Rights Reserved.
  *
  * CoderyuanApiLib
  *
