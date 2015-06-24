@@ -43,7 +43,6 @@ public class BaseWebApiServlet extends HttpServlet {
      * Charsets
      */
     private static final String DES_CHARSET = "utf-8";
-    private static final String RAW_CHARSET = "ISO-8859-1";
 
     /**
      * Code Names
@@ -134,11 +133,7 @@ public class BaseWebApiServlet extends HttpServlet {
     public String getParam(String key) {
         if (mParams.containsKey(key)) {
             String param = null;
-            try {
-                param = new String(mParams.get(key)[0].getBytes(RAW_CHARSET), DES_CHARSET);
-            } catch (UnsupportedEncodingException e) {
-                log(getServletName(), e.fillInStackTrace());
-            }
+            param = mParams.get(key)[0];
             return param;
         }
         return null;
