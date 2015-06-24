@@ -13,15 +13,21 @@ package com.coderyuan.api;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.coderyuan.models.ApiResultManager;
+import com.coderyuan.models.ApiResultManager.ErrorTypes;
 import com.coderyuan.models.ResultModel;
 import com.coderyuan.utils.JsonUtil;
 
@@ -31,11 +37,37 @@ import com.coderyuan.utils.JsonUtil;
  * @author yuanguozheng
  */
 @SuppressWarnings("serial")
-public abstract class BaseWebApiServlet extends HttpServlet {
+public class BaseWebApiServlet extends HttpServlet {
+
+    /**
+     * Charsets
+     */
+    private static final String DES_CHARSET = "utf-8";
+    private static final String RAW_CHARSET = "ISO-8859-1";
+
+    /**
+     * Code Names
+     */
+    private static final String API_EXT = "Api";
+    private static final String ENTER_METHOD_NAME = "handleRequest";
+    private static final String GET_FLAG_NAME = "mAllowGet";
+
+    /**
+     * Formats
+     */
+    private static final String FULL_FORMAT = "%s.%s";
+    private static final String CLASS_FORMAT = "%s%s";
+
+    private Class<?> mApiClass = null;
+    private Object mApiNewInstance = null;
+    private Method mOperationMethod = null;
 
     private boolean mAllowGet = true;
     private String mRestParam = null;
     private Map<String, String[]> mParams;
+
+    private HttpServletRequest mRequest;
+    private HttpServletResponse mResponse;
 
     public BaseWebApiServlet() {
         super();
@@ -54,12 +86,41 @@ public abstract class BaseWebApiServlet extends HttpServlet {
         return mAllowGet;
     }
 
-    public abstract ResultModel doOperation();
+    public ResultModel doOperation() {
+        String packageName = this.getClass().getPackage().getName();
+        String className = String.format(CLASS_FORMAT, StringUtils.capitalize(getRestParam()), API_EXT);
+        String apiClassName = String.format(FULL_FORMAT, packageName, className);
+        try {
+            mApiClass = Class.forName(apiClassName);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return ApiResultManager.getErrorResult(ErrorTypes.NOT_FOUND);
+        }
+        try {
+            Constructor<?> constructor = mApiClass.getConstructor(BaseWebApiServlet.class);
+            mApiNewInstance = constructor.newInstance(this);
+            Field allowGetField = mApiClass.getSuperclass().getDeclaredField(GET_FLAG_NAME);
+            allowGetField.setAccessible(true);
+            boolean isAllowGet = (boolean) allowGetField.get(mApiNewInstance);
+            if (!isAllowGet && mRequest.getMethod() == "GET") {
+                return ApiResultManager.getErrorResult(ErrorTypes.METHOD_NOT_ALLOW);
+            }
+            mOperationMethod = mApiClass.getMethod(ENTER_METHOD_NAME);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ApiResultManager.getErrorResult(ErrorTypes.NOT_FOUND);
+        }
+        try {
+            return (ResultModel) mOperationMethod.invoke(mApiNewInstance);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         if (!mAllowGet) {
-            res.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            JsonUtil.writeJson(res, ApiResultManager.getErrorResult(ErrorTypes.METHOD_NOT_ALLOW));
             return;
         }
         procRequest(req, res);
@@ -74,7 +135,7 @@ public abstract class BaseWebApiServlet extends HttpServlet {
         if (mParams.containsKey(key)) {
             String param = null;
             try {
-                param = new String(mParams.get(key)[0].getBytes("ISO-8859-1"), "utf-8");
+                param = new String(mParams.get(key)[0].getBytes(RAW_CHARSET), DES_CHARSET);
             } catch (UnsupportedEncodingException e) {
                 log(getServletName(), e.fillInStackTrace());
             }
@@ -87,20 +148,33 @@ public abstract class BaseWebApiServlet extends HttpServlet {
         return StringUtils.isBlank(mRestParam) ? null : mRestParam;
     }
 
+    public HttpSession getSession() {
+        return getRequest() != null ? getRequest().getSession() : null;
+    }
+
+    public HttpServletRequest getRequest() {
+        return mRequest;
+    }
+
+    public HttpServletResponse getResponse() {
+        return mResponse;
+    }
+
     private void initRestParam(HttpServletRequest req) {
-        mRestParam = req.getPathInfo();
+        mRestParam = req.getPathInfo().replaceAll("/", "");
     }
 
     private void procRequest(HttpServletRequest req, HttpServletResponse res) throws UnsupportedEncodingException,
             IOException {
+        mRequest = req;
+        mResponse = res;
         initParams(req);
         JsonUtil.writeJson(res, doOperation());
     }
 
     private void initParams(HttpServletRequest req) throws UnsupportedEncodingException {
-        req.setCharacterEncoding("utf-8");
+        req.setCharacterEncoding(DES_CHARSET);
         mParams = req.getParameterMap();
         initRestParam(req);
     }
-
 }

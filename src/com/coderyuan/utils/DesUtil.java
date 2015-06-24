@@ -12,7 +12,6 @@
 package com.coderyuan.utils;
 
 import java.security.Key;
-import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 
 import javax.crypto.Cipher;
@@ -74,7 +73,6 @@ public class DesUtil {
      */
     public static byte[] decode(String key, byte[] data) throws Exception {
         try {
-            SecureRandom sr = new SecureRandom();
             DESKeySpec dks = new DESKeySpec(key.getBytes());
             SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
             Key secretKey = keyFactory.generateSecret(dks);
