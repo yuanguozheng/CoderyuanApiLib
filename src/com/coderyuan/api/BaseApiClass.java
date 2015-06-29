@@ -11,11 +11,14 @@
  */
 package com.coderyuan.api;
 
+import javax.servlet.http.HttpSession;
+
 import com.coderyuan.models.ResultModel;
 
 /**
- * @author yuanguozheng
+ * API基类
  * 
+ * @author yuanguozheng
  */
 public abstract class BaseApiClass {
 
@@ -35,5 +38,9 @@ public abstract class BaseApiClass {
 
     protected String getParam(String name) {
         return mBase.getParam(name);
+    }
+
+    protected HttpSession getSession() {
+        return mBase.getSession();
     }
 }
