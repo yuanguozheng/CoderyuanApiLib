@@ -131,12 +131,7 @@ public class BaseWebApiServlet extends HttpServlet {
     }
 
     public String getParam(String key) {
-        if (mParams.containsKey(key)) {
-            String param = null;
-            param = mParams.get(key)[0];
-            return param;
-        }
-        return null;
+        return mParams.containsKey(key) ? mParams.get(key)[0] : null;
     }
 
     public String getRestParam() {

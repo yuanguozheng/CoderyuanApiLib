@@ -1,0 +1,82 @@
+/**
+ * Copyright (C) 2015 coderyuan.com. All Rights Reserved.
+ *
+ * CoderyuanApiLib
+ *
+ * BaseLoginFilter.java created on 2015年6月29日
+ *
+ * @author yuanguozheng
+ * @since 2015年6月29日
+ * @version v1.0.0
+ */
+package com.coderyuan.api;
+
+import java.io.IOException;
+import java.util.Map;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.coderyuan.models.ApiResultManager;
+import com.coderyuan.models.ApiResultManager.ErrorTypes;
+import com.coderyuan.utils.JsonUtil;
+
+/**
+ * Filter基类
+ * 
+ * @author yuanguozheng
+ */
+public abstract class BaseLoginFilter implements Filter {
+
+    private HttpServletRequest mRequest;
+    private HttpServletResponse mResponse;
+    private HttpSession mSession;
+    private Map<String, String[]> mParams;
+
+    public abstract boolean isLogin();
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+            ServletException {
+        mRequest = (HttpServletRequest) request;
+        mResponse = (HttpServletResponse) response;
+        mSession = mRequest.getSession();
+        if (mSession == null) {
+            JsonUtil.writeJson(mResponse, ApiResultManager.getErrorResult(ErrorTypes.NOT_LOGIN));
+            return;
+        }
+        initParams();
+        if (!isLogin()) {
+            JsonUtil.writeJson(mResponse, ApiResultManager.getErrorResult(ErrorTypes.NOT_LOGIN));
+            return;
+        }
+        chain.doFilter(mRequest, mResponse);
+    }
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+    }
+
+    @Override
+    public void destroy() {
+    }
+
+    public String getParam(String key) {
+        return mParams.containsKey(key) ? mParams.get(key)[0] : null;
+    }
+
+    public Object getSessionObject(String key) {
+        return mSession.getAttribute(key);
+    }
+
+    private void initParams() {
+        mParams = mRequest.getParameterMap();
+    }
+}
