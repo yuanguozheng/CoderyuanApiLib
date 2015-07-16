@@ -11,6 +11,9 @@
  */
 package com.coderyuan.utils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.security.Key;
 import java.security.spec.AlgorithmParameterSpec;
 
@@ -57,7 +60,7 @@ public class DesUtil {
             AlgorithmParameterSpec paramSpec = iv;
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, paramSpec);
             byte[] bytes = cipher.doFinal(data);
-            return Base64.encodeToString(bytes, Base64.NO_WRAP);
+            return URLEncoder.encode(Base64.encodeToString(bytes, Base64.NO_WRAP), "utf-8");
         } catch (Exception e) {
             throw new Exception(e);
         }
@@ -95,6 +98,11 @@ public class DesUtil {
      * @throws Exception
      */
     public static String decodeValue(String key, String data) {
+//        try {
+//            data = URLDecoder.decode(data, "utf-8");
+//        } catch (UnsupportedEncodingException e1) {
+//            e1.printStackTrace();
+//        }
         byte[] datas;
         String value = null;
         try {

@@ -155,6 +155,18 @@ public class HttpUtil {
         mStringParamsMap = map;
     }
 
+    public void clear() {
+        if (mFiles != null) {
+            mFiles.clear();
+        }
+        if (mRequestHeaders != null) {
+            mRequestHeaders.clear();
+        }
+        if (mStringParamsMap != null) {
+            mStringParamsMap.clear();
+        }
+    }
+
     /**
      * 开始请求
      * 
