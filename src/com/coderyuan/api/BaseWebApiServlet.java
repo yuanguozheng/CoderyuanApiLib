@@ -112,7 +112,8 @@ public class BaseWebApiServlet extends HttpServlet {
         try {
             return (ResultModel) mOperationMethod.invoke(mApiNewInstance);
         } catch (Exception e) {
-            return null;
+            e.printStackTrace();
+            return ApiResultManager.getErrorResult(ErrorTypes.SERVER_ERROR);
         }
     }
 
@@ -131,6 +132,14 @@ public class BaseWebApiServlet extends HttpServlet {
     }
 
     public String getParam(String key) {
+        if (mRequest.getMethod().equals("GET")) {
+            try {
+                return mParams.containsKey(key) ? new String(mParams.get(key)[0].getBytes("iso-8859-1"), DES_CHARSET)
+                        : null;
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
         return mParams.containsKey(key) ? mParams.get(key)[0] : null;
     }
 

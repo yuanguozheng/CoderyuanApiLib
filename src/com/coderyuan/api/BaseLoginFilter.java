@@ -76,6 +76,10 @@ public abstract class BaseLoginFilter implements Filter {
         return mSession.getAttribute(key);
     }
 
+    public void setSessionObject(String key, Object value) {
+        mSession.setAttribute(key, value);
+    }
+
     private void initParams() {
         mParams = mRequest.getParameterMap();
     }
