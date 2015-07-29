@@ -34,6 +34,7 @@ public class JdbcUtil {
         int result = -1;
         try {
             result = sQueryRunner.update(con, sql, params);
+            con.commit();
         } catch (SQLException e) {
             System.out.println("Execute Update/Insert Failed!");
             System.out.println("SQL: " + sql);
