@@ -65,10 +65,11 @@ public class HttpUtil {
     private String mServerUrl;
     private Map<String, List<String>> mResponseHeaders;
     private Map<String, String> mRequestHeaders;
+    private boolean mDirectWriteParams;
 
     /**
      * 构造函数，初始化Http工具类
-     * 
+     *
      * @param {@link Method}，请求方法，可选值：GET、POST、POST_FILE
      * @param {@link OnCompleted}，用于回传返回数据
      */
@@ -98,7 +99,7 @@ public class HttpUtil {
 
     /**
      * 添加字符串参数
-     * 
+     *
      * @param 键
      * @param 值
      */
@@ -111,7 +112,7 @@ public class HttpUtil {
 
     /**
      * 添加单个文件参数
-     * 
+     *
      * @param 文件信息
      */
     public void addFile(FileInfo fileInfo) {
@@ -126,7 +127,7 @@ public class HttpUtil {
 
     /**
      * 设置服务器Url
-     * 
+     *
      * @param url
      */
     public void setUrl(String url) {
@@ -137,8 +138,18 @@ public class HttpUtil {
     }
 
     /**
+     * 直接写入URL参数
+     *
+     * @param isDirect
+     * @param params
+     */
+    public void setDirectWriteParams(String params) {
+        mDirectWriteParams = true;
+    }
+
+    /**
      * 添加文件列表
-     * 
+     *
      * @param 文件列表
      */
     public void setFiles(ArrayList<FileInfo> files) {
@@ -169,7 +180,7 @@ public class HttpUtil {
 
     /**
      * 开始请求
-     * 
+     *
      * @return 服务器返回字符串，出错返回null
      */
     private String doRequest() {
@@ -190,7 +201,7 @@ public class HttpUtil {
 
     /**
      * 构建HTTP请求
-     * 
+     *
      * @throws IOException，写入流失败时抛出异常
      */
     private void buildRequest() throws IOException {
@@ -270,8 +281,9 @@ public class HttpUtil {
 
     /**
      * 构建字符串参数请求体
-     * 
+     *
      * @return 是否含有字符串参数
+     *
      * @throws IOException
      */
     private boolean buildStringParam() throws IOException {
@@ -280,9 +292,11 @@ public class HttpUtil {
 
     /**
      * 构建字符串参数请求体（支持外传builder）
-     * 
+     *
      * @param outBuilder，外部builder
+     *
      * @return 是否含有字符串参数
+     *
      * @throws IOException，写入流失败时抛出异常
      */
     private boolean buildStringParam(StringBuilder outBuilder, boolean append) throws IOException {
@@ -317,7 +331,7 @@ public class HttpUtil {
 
     /**
      * 构建multipart格式的字符串参数
-     * 
+     *
      * @param builder
      * @param key
      */
@@ -335,9 +349,10 @@ public class HttpUtil {
 
     /**
      * 构建Url转码格式的字符串参数
-     * 
+     *
      * @param builder，字符串builder
      * @param key，键
+     *
      * @throws UnsupportedEncodingException，URL转码失败时抛出异常
      */
     private void buildUrlencodedString(StringBuilder builder, String key) throws UnsupportedEncodingException {
@@ -348,8 +363,9 @@ public class HttpUtil {
 
     /**
      * 写入字符串流
-     * 
+     *
      * @param 字符串
+     *
      * @throws IOException，写入流失败时抛出异常
      */
     private void writeStringBytes(String string) throws IOException {
@@ -359,8 +375,9 @@ public class HttpUtil {
 
     /**
      * 构建文件请求体
-     * 
+     *
      * @return 是否含有文件
+     *
      * @throws IOException，写入流失败时抛出异常
      */
     private boolean buildFileBody() throws IOException {
@@ -386,7 +403,7 @@ public class HttpUtil {
 
     /**
      * 写入文件流
-     * 
+     *
      * @param 文件
      */
     private void writeFileStream(File file) {
@@ -408,7 +425,7 @@ public class HttpUtil {
 
     /**
      * 写入请求结束符号
-     * 
+     *
      * @throws IOException，写入流失败时抛出异常
      */
     private void writeEndBoundary() throws IOException {

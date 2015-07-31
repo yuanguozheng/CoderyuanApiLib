@@ -1,13 +1,13 @@
 /**
  * Copyright (C) 2015 coderyuan.com. All Rights Reserved.
- *
+ * <p>
  * CoderyuanApiLib
- *
+ * <p>
  * ResultModel.java created on 2015年6月17日
  *
  * @author yuanguozheng
- * @since 2015年6月17日
  * @version v1.0.0
+ * @since 2015年6月17日
  */
 package com.coderyuan.models;
 
@@ -26,7 +26,7 @@ public class ResultModel {
     }
 
     public void setStatus(boolean status) {
-        this.mStatus = status;
+        mStatus = status;
     }
 
     public Object getMsg() {
@@ -34,7 +34,7 @@ public class ResultModel {
     }
 
     public void setMsg(Object msg) {
-        this.mMsg = msg;
+        mMsg = msg;
     }
 
 }

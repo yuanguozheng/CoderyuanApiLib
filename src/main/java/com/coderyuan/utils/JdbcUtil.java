@@ -1,4 +1,4 @@
-package com.coderyuan.utils; /**
+/**
  * Copyright (c) 2015 coderyuan.com. All Rights Reserved.
  * <p>
  * WlanApp
@@ -9,17 +9,20 @@ package com.coderyuan.utils; /**
  * @version 1.0.0
  * @since 15/7/27
  */
+package com.coderyuan.utils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.MapHandler;
 import org.apache.commons.dbutils.handlers.MapListHandler;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * JdbcUtil
@@ -31,14 +34,21 @@ public class JdbcUtil {
     private static QueryRunner sQueryRunner = new QueryRunner();
 
     public static boolean update(Connection con, String sql, Object... params) {
+        if (sql == null || StringUtils.isEmpty(sql)) {
+            return false;
+        }
         int result = -1;
         try {
             result = sQueryRunner.update(con, sql, params);
-            con.commit();
+            if (!con.getAutoCommit()) {
+                con.commit();
+            }
         } catch (SQLException e) {
             System.out.println("Execute Update/Insert Failed!");
             System.out.println("SQL: " + sql);
             e.printStackTrace();
+        } finally {
+            DbUtils.closeQuietly(con);
         }
         return result > 0;
     }
@@ -49,6 +59,9 @@ public class JdbcUtil {
     }
 
     public static Map<String, Object> queryToMap(Connection con, String sql, Object... params) {
+        if (sql == null || StringUtils.isEmpty(sql)) {
+            return null;
+        }
         Map<String, Object> map = null;
         try {
             map = sQueryRunner.query(con, sql, new MapHandler(), params);
@@ -56,6 +69,8 @@ public class JdbcUtil {
             System.out.println("Execute Query Failed!");
             System.out.println("SQL: " + sql);
             e.printStackTrace();
+        } finally {
+            DbUtils.closeQuietly(con);
         }
         return map;
     }
@@ -66,6 +81,9 @@ public class JdbcUtil {
     }
 
     public static List<Map<String, Object>> queryToList(Connection con, String sql, Object... params) {
+        if (sql == null || StringUtils.isEmpty(sql)) {
+            return null;
+        }
         List<Map<String, Object>> list = null;
         try {
             list = sQueryRunner.query(con, sql, new MapListHandler(), params);
@@ -73,6 +91,8 @@ public class JdbcUtil {
             System.out.println("Execute Query Failed!");
             System.out.println("SQL: " + sql);
             e.printStackTrace();
+        } finally {
+            DbUtils.closeQuietly(con);
         }
         return list;
     }
@@ -83,6 +103,9 @@ public class JdbcUtil {
     }
 
     public static <T> T queryToModel(Connection con, String sql, Class<T> T, Object... params) {
+        if (sql == null || StringUtils.isEmpty(sql)) {
+            return null;
+        }
         T resultObject = null;
         try {
             resultObject = sQueryRunner.query(con, sql, new BeanHandler<>(T), params);
@@ -90,6 +113,8 @@ public class JdbcUtil {
             System.out.println("Execute Query Failed!");
             System.out.println("SQL: " + sql);
             e.printStackTrace();
+        } finally {
+            DbUtils.closeQuietly(con);
         }
         return resultObject;
     }
@@ -100,6 +125,9 @@ public class JdbcUtil {
     }
 
     public static <T> List<T> queryToModelList(Connection con, String sql, Class<T> T, Object... params) {
+        if (sql == null || StringUtils.isEmpty(sql)) {
+            return null;
+        }
         List<T> list = null;
         try {
             list = sQueryRunner.query(con, sql, new BeanListHandler<>(T), params);
@@ -107,6 +135,8 @@ public class JdbcUtil {
             System.out.println("Execute Query Failed!");
             System.out.println("SQL: " + sql);
             e.printStackTrace();
+        } finally {
+            DbUtils.closeQuietly(con);
         }
         return list;
     }
