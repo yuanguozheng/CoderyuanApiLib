@@ -1,13 +1,13 @@
 /**
  * Copyright (C) 2015 coderyuan.com. All Rights Reserved.
- *
+ * <p>
  * CoderyuanApiLib
- *
+ * <p>
  * JsonUtil.java created on 2015年6月17日
  *
  * @author yuanguozheng
- * @since 2015年6月17日
  * @version v1.0.0
+ * @since 2015年6月17日
  */
 package com.coderyuan.utils;
 
@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.coderyuan.models.ResultModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -28,9 +29,20 @@ public class JsonUtil {
         writer.write(toJson(obj));
     }
 
+    public static void writeJson(HttpServletResponse res, ResultModel obj) throws IOException {
+        PrintWriter writer = res.getWriter();
+        if (obj.getRawOutput()) {
+            writer.write(obj.getMsg().toString());
+        } else {
+            res.setContentType("application/json;\tcharset=utf-8");
+            res.setCharacterEncoding("utf-8");
+            writer.write(toJson(obj));
+        }
+    }
+
     public static String toJson(Object obj) {
         try {
-            Gson gson = new GsonBuilder().serializeNulls().create();
+            Gson gson = new GsonBuilder().serializeNulls().excludeFieldsWithoutExposeAnnotation().create();
             String result = gson.toJson(obj);
             return result;
         } catch (Exception e) {

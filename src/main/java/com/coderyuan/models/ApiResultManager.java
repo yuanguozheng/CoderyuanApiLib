@@ -1,13 +1,13 @@
 /**
  * Copyright (C) 2015 coderyuan.com. All Rights Reserved.
- *
+ * <p>
  * CoderyuanApiLib
- *
+ * <p>
  * ApiResultManager.java created on 2015年6月17日
  *
  * @author yuanguozheng
- * @since 2015年6月17日
  * @version v1.0.0
+ * @since 2015年6月17日
  */
 package com.coderyuan.models;
 
@@ -47,5 +47,12 @@ public class ApiResultManager {
 
     public static ResultModel getDefaultSuccesResult() {
         return getSuccesResult(SuccessTypes.SUCCESS.toString());
+    }
+
+    public static ResultModel getRawResult(String result) {
+        ResultModel raw = new ResultModel();
+        raw.setRawOutput(true);
+        raw.setMsg(result);
+        return raw;
     }
 }

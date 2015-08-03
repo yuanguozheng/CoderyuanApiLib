@@ -1,13 +1,13 @@
 /**
  * Copyright (C) 2015 coderyuan.com. All Rights Reserved.
- *
+ * <p>
  * CoderyuanApiLib
- *
+ * <p>
  * BaseWebApiServlet.java created on 2015年6月17日
  *
  * @author yuanguozheng
- * @since 2015年6月17日
  * @version v1.0.0
+ * @since 2015年6月17日
  */
 package com.coderyuan.api;
 
@@ -33,7 +33,7 @@ import com.coderyuan.utils.JsonUtil;
 
 /**
  * Api基类
- * 
+ *
  * @author yuanguozheng
  */
 @SuppressWarnings("serial")
@@ -100,8 +100,8 @@ public class BaseWebApiServlet extends HttpServlet {
             mApiNewInstance = constructor.newInstance(this);
             Field allowGetField = mApiClass.getSuperclass().getDeclaredField(GET_FLAG_NAME);
             allowGetField.setAccessible(true);
-            boolean isAllowGet = (boolean) allowGetField.get(mApiNewInstance);
-            if (!isAllowGet && mRequest.getMethod() == "GET") {
+            mAllowGet = (boolean) allowGetField.get(mApiNewInstance);
+            if (!mAllowGet && mRequest.getMethod() == "GET") {
                 return ApiResultManager.getErrorResult(ErrorTypes.METHOD_NOT_ALLOW);
             }
             mOperationMethod = mApiClass.getMethod(ENTER_METHOD_NAME);
@@ -129,6 +129,10 @@ public class BaseWebApiServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         procRequest(req, res);
+    }
+
+    public Map<String, String[]> getAllParams() {
+        return mParams == null ? null : mParams;
     }
 
     public String getParam(String key) {

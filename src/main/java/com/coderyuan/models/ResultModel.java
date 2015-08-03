@@ -11,15 +11,20 @@
  */
 package com.coderyuan.models;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class ResultModel {
 
+    @Expose
     @SerializedName("status")
     private boolean mStatus;
 
+    @Expose
     @SerializedName("msg")
     private Object mMsg;
+
+    private boolean mRawOutput;
 
     public boolean getStatus() {
         return mStatus;
@@ -37,4 +42,15 @@ public class ResultModel {
         mMsg = msg;
     }
 
+    public boolean isRawOutput() {
+        return mRawOutput;
+    }
+
+    public boolean getRawOutput() {
+        return mRawOutput;
+    }
+
+    public void setRawOutput(boolean rawOutput) {
+        mRawOutput = rawOutput;
+    }
 }
