@@ -11,7 +11,9 @@
  */
 package com.coderyuan.api;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -129,6 +131,30 @@ public class BaseWebApiServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         procRequest(req, res);
+    }
+
+    public String getRequestBody() {
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new InputStreamReader(mRequest.getInputStream(), "UTF-8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        StringBuffer reString = new StringBuffer();
+        String tmp = null;
+        while (true) {
+            try {
+                tmp = br.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (tmp == null) {
+                break;
+            } else {
+                reString.append(tmp);
+            }
+        }
+        return reString.toString();
     }
 
     public Map<String, String[]> getAllParams() {

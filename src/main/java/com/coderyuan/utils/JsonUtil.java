@@ -30,19 +30,19 @@ public class JsonUtil {
     }
 
     public static void writeJson(HttpServletResponse res, ResultModel obj) throws IOException {
+        res.setContentType("application/json;\tcharset=utf-8");
+        res.setCharacterEncoding("utf-8");
         PrintWriter writer = res.getWriter();
         if (obj.getRawOutput()) {
             writer.write(obj.getMsg().toString());
         } else {
-            res.setContentType("application/json;\tcharset=utf-8");
-            res.setCharacterEncoding("utf-8");
             writer.write(toJson(obj));
         }
     }
 
     public static String toJson(Object obj) {
         try {
-            Gson gson = new GsonBuilder().serializeNulls().excludeFieldsWithoutExposeAnnotation().create();
+            Gson gson = new GsonBuilder().serializeNulls().create();
             String result = gson.toJson(obj);
             return result;
         } catch (Exception e) {
