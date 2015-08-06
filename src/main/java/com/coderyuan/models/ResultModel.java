@@ -21,7 +21,7 @@ public class ResultModel {
     @SerializedName("msg")
     private Object mMsg;
 
-    private boolean mRawOutput;
+    private boolean mRawOutput = false;
 
     public boolean getStatus() {
         return mStatus;

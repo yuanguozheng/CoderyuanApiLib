@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.coderyuan.models.ApiResultManager;
 import com.coderyuan.models.ResultModel;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -35,6 +36,9 @@ public class JsonUtil {
         res.setContentType("application/json;\tcharset=utf-8");
         res.setCharacterEncoding("utf-8");
         PrintWriter writer = res.getWriter();
+        if (obj == null) {
+            obj = ApiResultManager.getErrorResult(ApiResultManager.ErrorTypes.UNKNOWN_ERROR);
+        }
         if (obj.getRawOutput()) {
             writer.write(obj.getMsg().toString());
         } else {
