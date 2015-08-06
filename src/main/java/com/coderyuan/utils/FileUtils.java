@@ -1,13 +1,13 @@
 /**
  * Copyright (C) 2015 coderyuan.com. All Rights Reserved.
- *
+ * <p>
  * CoderyuanApiLib
- *
+ * <p>
  * FileUtils.java created on 2015年6月22日
  *
  * @author yuanguozheng
- * @since 2015年6月22日
  * @version v1.0.0
+ * @since 2015年6月22日
  */
 package com.coderyuan.utils;
 
@@ -31,14 +31,14 @@ import eu.medsea.mimeutil.MimeUtil;
 
 /**
  * @author yuanguozheng
- * 
  */
 public class FileUtils {
 
     /**
      * 遍历文件夹中文件
-     * 
+     *
      * @param filepath 文件路径
+     *
      * @return 返回file［］ 数组
      */
     public static File[] getFileList(String filepath) {
@@ -59,47 +59,35 @@ public class FileUtils {
 
     /**
      * 读取文本文件内容
-     * 
-     * @param filePathAndName 带有完整绝对路径的文件名
-     * @param encoding 文本文件打开的编码方式
+     *
      * @return 返回文本文件的内容
      */
-    public static String readTxt(String filePathAndName, String encoding) throws IOException {
-        encoding = encoding.trim();
-        StringBuffer str = new StringBuffer("");
-        String st = "";
+    public static String readTxt(String file) {
+        InputStreamReader read = null;
         try {
-            FileInputStream fs = new FileInputStream(filePathAndName);
-            InputStreamReader isr;
-            if (encoding.equals("")) {
-                isr = new InputStreamReader(fs);
-            } else {
-                isr = new InputStreamReader(fs, encoding);
-            }
-            BufferedReader br = new BufferedReader(isr);
-            try {
-                String data = "";
-                while ((data = br.readLine()) != null) {
-                    str.append(data);
-                }
-            } catch (Exception e) {
-                str.append(e.toString());
-            } finally {
-                br.close();
-            }
-            st = str.toString();
-            if (st != null && st.length() > 1)
-                st = st.substring(0, st.length() - 1);
-        } catch (IOException es) {
-            st = "";
+            read = new InputStreamReader(new FileInputStream(file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
-        return st;
+        assert read != null;
+        BufferedReader bufferedReader = new BufferedReader(read);
+        StringBuilder lineTxt = new StringBuilder();
+        try {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                lineTxt.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return lineTxt.toString();
     }
 
     /**
      * 新建目录
-     * 
+     *
      * @param folderPath 目录
+     *
      * @return 返回目录创建后的路径
      */
     public static String createFolder(String folderPath) {
@@ -118,9 +106,10 @@ public class FileUtils {
 
     /**
      * 多级目录创建
-     * 
+     *
      * @param folderPath 准备要在本级目录下创建新目录的目录路径例如 c:myf
-     * @param paths 无限级目录参数，各级目录以单数线区分 例如 a|b|c
+     * @param paths      无限级目录参数，各级目录以单数线区分 例如 a|b|c
+     *
      * @return 返回创建文件后的路径
      */
     public static String createFolders(String folderPath, String paths) {
@@ -145,9 +134,10 @@ public class FileUtils {
 
     /**
      * 新建文件
-     * 
+     *
      * @param filePathAndName 文本文件完整绝对路径及文件名
-     * @param fileContent 文本文件内容
+     * @param fileContent     文本文件内容
+     *
      * @return
      */
     public static void createFile(String filePathAndName, String fileContent) {
@@ -171,10 +161,11 @@ public class FileUtils {
 
     /**
      * 有编码方式的文件创建
-     * 
+     *
      * @param filePathAndName 文本文件完整绝对路径及文件名
-     * @param fileContent 文本文件内容
-     * @param encoding 编码方式 例如 GBK 或者 UTF-8
+     * @param fileContent     文本文件内容
+     * @param encoding        编码方式 例如 GBK 或者 UTF-8
+     *
      * @return
      */
     public static void createFile(String filePathAndName, String fileContent, String encoding) {
@@ -196,8 +187,9 @@ public class FileUtils {
 
     /**
      * 删除文件
-     * 
+     *
      * @param filePathAndName 文本文件完整绝对路径及文件名
+     *
      * @return Boolean 成功删除返回true遭遇异常返回false
      */
     public static boolean delFile(String filePathAndName) {
@@ -219,8 +211,9 @@ public class FileUtils {
 
     /**
      * 删除文件
-     * 
+     *
      * @param folderPath 文件夹完整绝对路径
+     *
      * @return
      */
     public static void delFolder(String folderPath) {
@@ -239,8 +232,9 @@ public class FileUtils {
 
     /**
      * 删除指定文件夹下所有文件
-     * 
+     *
      * @param path 文件夹完整绝对路径
+     *
      * @return
      */
     public static boolean delAllFile(String path) {
@@ -276,9 +270,10 @@ public class FileUtils {
 
     /**
      * 复制单个文件
-     * 
+     *
      * @param oldPathFile 准备复制的文件源
      * @param newPathFile 拷贝到新绝对路径带文件名
+     *
      * @return
      */
     public static void copyFile(String oldPathFile, String newPathFile) {
@@ -305,9 +300,10 @@ public class FileUtils {
 
     /**
      * 复制整个文件夹的内容
-     * 
+     *
      * @param oldPath 准备拷贝的目录
      * @param newPath 指定绝对路径的新目录
+     *
      * @return
      */
     public static void copyFolder(String oldPath, String newPath) {
@@ -347,9 +343,10 @@ public class FileUtils {
 
     /**
      * 移动文件
-     * 
+     *
      * @param oldPath
      * @param newPath
+     *
      * @return
      */
     public static void moveFile(String oldPath, String newPath) {
@@ -359,9 +356,10 @@ public class FileUtils {
 
     /**
      * 移动目录
-     * 
+     *
      * @param oldPath
      * @param newPath
+     *
      * @return
      */
     public static void moveFolder(String oldPath, String newPath) {
@@ -371,9 +369,10 @@ public class FileUtils {
 
     /**
      * 建立一个可以追加的BufferedReader
-     * 
+     *
      * @param fileDir
      * @param fileName
+     *
      * @return
      */
     public static BufferedWriter getWriter(String fileDir, String fileName) {
@@ -396,10 +395,11 @@ public class FileUtils {
 
     /**
      * 得到一个BufferedReader
-     * 
+     *
      * @param fileDir
      * @param fileName
      * @param encoding
+     *
      * @return
      */
     public static BufferedReader getReader(String fileDir, String fileName, String encoding) {
@@ -420,8 +420,9 @@ public class FileUtils {
 
     /**
      * 获得去除扩展名后的文件名
-     * 
+     *
      * @param fileName，原始文件名
+     *
      * @return 无扩展名的文件名，无文件名返回null
      */
     public static String getFileNameWithoutExtension(String fileName) {
@@ -438,8 +439,9 @@ public class FileUtils {
 
     /**
      * 获得扩展名
-     * 
+     *
      * @param 文件名
+     *
      * @return 扩展名（不含.），无扩展名返回null
      */
     public static String getExt(String fileName) {
@@ -452,8 +454,9 @@ public class FileUtils {
 
     /**
      * 用文件名获得MIME
-     * 
+     *
      * @param 文件名
+     *
      * @return MIME，无文件名返回null
      */
     public static String getMimeByName(String name) {
@@ -474,7 +477,7 @@ public class FileUtils {
 
     /**
      * 保证文件父目录存在
-     * 
+     *
      * @param file，文件
      */
     public static boolean ensureParent(final File file) {

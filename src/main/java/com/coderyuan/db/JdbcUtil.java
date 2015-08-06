@@ -9,7 +9,7 @@
  * @version 1.0.0
  * @since 15/7/27
  */
-package com.coderyuan.utils;
+package com.coderyuan.db;
 
 import java.sql.Connection;
 import java.sql.SQLException;

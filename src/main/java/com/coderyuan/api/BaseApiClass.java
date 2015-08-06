@@ -36,7 +36,7 @@ public abstract class BaseApiClass {
 
     public abstract ResultModel handleRequest();
 
-    protected String getParam(String name) {
+    public String getParam(String name) {
         return mBase.getParam(name);
     }
 
