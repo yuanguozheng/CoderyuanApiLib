@@ -162,12 +162,6 @@ public class BaseWebApiServlet extends HttpServlet {
     }
 
     public String getParam(String key) {
-        try {
-            return mParams.containsKey(key) ? new String(mParams.get(key)[0].getBytes("iso-8859-1"), DES_CHARSET)
-                    : null;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
         return mParams.containsKey(key) ? mParams.get(key)[0] : null;
     }
 
