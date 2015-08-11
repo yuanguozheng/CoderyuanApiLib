@@ -162,6 +162,14 @@ public class BaseWebApiServlet extends HttpServlet {
     }
 
     public String getParam(String key) {
+        if (mRequest.getMethod().toUpperCase().equals("POST")) {
+            try {
+                return mParams.containsKey(key) ?
+                        new String(mParams.get(key)[0].getBytes("iso-8859-1"), DES_CHARSET) : null;
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
         return mParams.containsKey(key) ? mParams.get(key)[0] : null;
     }
 
@@ -194,7 +202,6 @@ public class BaseWebApiServlet extends HttpServlet {
     }
 
     private void initParams(HttpServletRequest req) throws UnsupportedEncodingException {
-        req.setCharacterEncoding(DES_CHARSET);
         mParams = req.getParameterMap();
         initRestParam(req);
     }
