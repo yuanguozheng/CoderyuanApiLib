@@ -146,6 +146,22 @@ public class JdbcUtil {
         return queryToModelList(con, sql, T, paramsArray);
     }
 
+    public static Object queryToObject(Connection con, String sql, Object... params) {
+        if (sql == null || StringUtils.isEmpty(sql)) {
+            return null;
+        }
+        Map<String, Object> objectMap = queryToMap(con, sql, params);
+        if (objectMap == null) {
+            return null;
+        }
+        if (objectMap.keySet().size() != 0) {
+            String key = objectMap.keySet().toArray()[0].toString();
+            return objectMap.get(key);
+        } else {
+            return null;
+        }
+    }
+
     private static Object[] convertParams(List<Object> params) {
         Object[] paramsArray = null;
         if (params != null) {
