@@ -23,6 +23,8 @@ public class ResultModel {
 
     private boolean mRawOutput = false;
 
+    private boolean mJsonpMode = false;
+
     public boolean getStatus() {
         return mStatus;
     }
@@ -49,5 +51,13 @@ public class ResultModel {
 
     public void setRawOutput(boolean rawOutput) {
         mRawOutput = rawOutput;
+    }
+
+    public boolean isJsonpMode() {
+        return mJsonpMode;
+    }
+
+    public void useJsonp() {
+        mJsonpMode = true;
     }
 }

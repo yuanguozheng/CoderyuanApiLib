@@ -198,7 +198,11 @@ public class BaseWebApiServlet extends HttpServlet {
         mRequest = req;
         mResponse = res;
         initParams(req);
-        JsonUtil.writeJson(res, doOperation());
+        if (mParams.containsKey("callback")) {
+            JsonUtil.writeJson(res, doOperation(), mParams.get("callback")[0]);
+        } else {
+            JsonUtil.writeJson(res, doOperation());
+        }
     }
 
     private void initParams(HttpServletRequest req) throws UnsupportedEncodingException {

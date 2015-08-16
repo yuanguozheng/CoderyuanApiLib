@@ -25,13 +25,6 @@ import com.google.gson.GsonBuilder;
 
 public class JsonUtil {
 
-    public static void writeJson(HttpServletResponse res, Object obj) throws IOException {
-        res.setContentType("application/json;\tcharset=utf-8");
-        res.setCharacterEncoding("utf-8");
-        PrintWriter writer = res.getWriter();
-        writer.write(toJson(obj));
-    }
-
     public static void writeJson(HttpServletResponse res, ResultModel obj) throws IOException {
         res.setContentType("application/json;\tcharset=utf-8");
         res.setCharacterEncoding("utf-8");
@@ -48,12 +41,26 @@ public class JsonUtil {
 
     public static String toJson(Object obj) {
         try {
-            Gson gson = new GsonBuilder().setExclusionStrategies(new JsonKit("mRawOutput")).serializeNulls().create();
-            String result = gson.toJson(obj);
-            return result;
+            Gson gson = new GsonBuilder().setExclusionStrategies(new JsonKit("mRawOutput", "mJsonpMode"))
+                    .serializeNulls().create();
+            return gson.toJson(obj);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return "{\"status\":false,\"msg\":\"JSON_ERROR\"}";
+        }
+    }
+
+    public static void writeJson(HttpServletResponse res, ResultModel obj, String callback) throws IOException {
+        res.setContentType("application/json;\tcharset=utf-8");
+        res.setCharacterEncoding("utf-8");
+        PrintWriter writer = res.getWriter();
+        if (obj == null) {
+            obj = ApiResultManager.getErrorResult(ApiResultManager.ErrorTypes.UNKNOWN_ERROR);
+        }
+        if (obj.getRawOutput()) {
+            writer.write(String.format("%s(%s)", callback, obj.getMsg().toString()));
+        } else {
+            writer.write(String.format("%s(%s)", callback, toJson(obj)));
         }
     }
 
@@ -62,7 +69,7 @@ public class JsonUtil {
         static String[] keys;
 
         public JsonKit(String... keys) {
-            this.keys = keys;
+            JsonKit.keys = keys;
         }
 
         @Override
