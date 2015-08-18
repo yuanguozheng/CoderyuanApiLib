@@ -89,7 +89,11 @@ public class BaseWebApiServlet extends HttpServlet {
 
     public ResultModel doOperation() {
         String packageName = this.getClass().getPackage().getName();
-        String className = String.format(CLASS_FORMAT, StringUtils.capitalize(getRestParam()), API_EXT);
+        String restParam = getRestParam();
+        if (StringUtils.isEmpty(restParam)) {
+            restParam = packageName;
+        }
+        String className = String.format(CLASS_FORMAT, StringUtils.capitalize(restParam), API_EXT);
         String apiClassName = String.format(FULL_FORMAT, packageName, className);
         try {
             mApiClass = Class.forName(apiClassName);
