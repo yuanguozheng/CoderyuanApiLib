@@ -6,8 +6,8 @@
  * BaseLoginFilter.java created on 2015年6月29日
  *
  * @author yuanguozheng
- * @since 2015年6月29日
  * @version v1.0.0
+ * @since 2015年6月29日
  */
 package com.coderyuan.api;
 
@@ -30,7 +30,7 @@ import com.coderyuan.utils.JsonUtil;
 
 /**
  * Filter基类
- * 
+ *
  * @author yuanguozheng
  */
 public abstract class BaseLoginFilter implements Filter {
@@ -66,6 +66,14 @@ public abstract class BaseLoginFilter implements Filter {
 
     @Override
     public void destroy() {
+    }
+
+    public HttpServletRequest getRequest() {
+        return mRequest;
+    }
+
+    public HttpServletResponse getResponse() {
+        return mResponse;
     }
 
     public String getParam(String key) {
