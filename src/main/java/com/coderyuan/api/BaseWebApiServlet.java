@@ -194,7 +194,12 @@ public class BaseWebApiServlet extends HttpServlet {
     }
 
     private void initRestParam(HttpServletRequest req) {
-        mRestParam = req.getPathInfo().replaceAll("/", "");
+        String pathInfo = req.getPathInfo();
+        if (StringUtils.isEmpty(pathInfo)) {
+            mRestParam = null;
+        } else {
+            mRestParam = pathInfo.replaceAll("/", "");
+        }
     }
 
     private void procRequest(HttpServletRequest req, HttpServletResponse res) throws UnsupportedEncodingException,
